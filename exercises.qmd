@@ -1,0 +1,524 @@
+# Exercises
+
+## Introduction
+
+Practice is essential for mastering financial mathematics. These exercises cover all major topics from the course. Work through them carefully, and check your answers against the detailed solutions provided.
+
+::: {.callout-tip}
+## How to Use These Exercises
+1. **Try first without looking at solutions**
+2. Show all your work (write out formulas, calculations)
+3. Check units and signs carefully
+4. Compare your approach with the solution method
+5. If you get stuck, review the relevant chapter before checking the solution
+:::
+
+---
+
+## Exercise 1: Cashflow Table → Interest Split
+
+::: {.callout-note icon=true}
+## Problem
+You've taken out a **3-year loan of $10,000** at a **7% annual interest rate** with **fixed annual payments of $3,810.52**.
+
+Complete the amortization table below by filling in the missing values:
+
+| Year | Payment | Interest | Principal Repayment | Outstanding Balance |
+|------|---------|----------|---------------------|---------------------|
+| 0 | — | — | — | 10,000.00 |
+| 1 | 3,810.52 | **?** | **?** | **?** |
+| 2 | 3,810.52 | **?** | **?** | **?** |
+| 3 | 3,810.52 | **?** | **?** | 0.00 |
+
+**Related Chapter**: [Basic Notions](basic_notions.qmd)
+:::
+
+### Solution {.unnumbered}
+
+::: {.callout-tip icon=false collapse="true"}
+## Click to reveal solution
+
+**Key formulas**:
+- Interest for period = Outstanding balance at start × interest rate
+- Principal repayment = Payment − Interest
+- New balance = Old balance − Principal repayment
+
+**Year 1**:
+- Interest: $10,000 \times 0.07 = \$700.00$
+- Principal: $3,810.52 - 700.00 = \$3,110.52$
+- Balance: $10,000 - 3,110.52 = \$6,889.48$
+
+**Year 2**:
+- Interest: $6,889.48 \times 0.07 = \$482.26$
+- Principal: $3,810.52 - 482.26 = \$3,328.26$
+- Balance: $6,889.48 - 3,328.26 = \$3,561.22$
+
+**Year 3**:
+- Interest: $3,561.22 \times 0.07 = \$249.29$
+- Principal: $3,810.52 - 249.29 = \$3,561.23$ (slight rounding)
+- Balance: $3,561.22 - 3,561.22 = \$0.00$
+
+**Completed Table**:
+
+| Year | Payment | Interest | Principal | Outstanding Balance |
+|------|---------|----------|-----------|---------------------|
+| 0 | — | — | — | 10,000.00 |
+| 1 | 3,810.52 | 700.00 | 3,110.52 | 6,889.48 |
+| 2 | 3,810.52 | 482.26 | 3,328.26 | 3,561.22 |
+| 3 | 3,810.52 | 249.29 | 3,561.23 | 0.00 |
+
+**Key insight**: Notice how interest decreases each year while principal repayment increases—this is typical for fixed-payment loans.
+:::
+
+---
+
+## Exercise 2: Bond Dirty Price
+
+::: {.callout-note icon=true}
+## Problem
+You're buying a **US Treasury bond** with the following characteristics:
+
+- **Face value**: $1,000
+- **Coupon rate**: 5% annual (paid semi-annually, so $25 every 6 months)
+- **Clean price**: Quoted at **98.75** (as % of face value)
+- **Last coupon date**: January 15, 2025
+- **Settlement date** (purchase date): April 10, 2025
+- **Next coupon date**: July 15, 2025
+- **Day count convention**: ACT/ACT
+
+**Questions**:
+1. Calculate the **accrued interest**
+2. Calculate the **dirty price** (what you actually pay)
+3. Draw a timeline showing the accrued period
+
+**Related Chapter**: [Bonds](bonds.qmd)
+:::
+
+### Solution {.unnumbered}
+
+::: {.callout-tip icon=false collapse="true"}
+## Click to reveal solution
+
+**Step 1: Count the days**
+
+- Days from Jan 15 to Apr 10:
+  - Jan 15 → Jan 31: 16 days
+  - February: 28 days (2025 is not a leap year)
+  - March: 31 days
+  - Apr 1 → Apr 10: 10 days
+  - **Total elapsed**: $16 + 28 + 31 + 10 = 85$ days
+
+- Days in full coupon period (Jan 15 → Jul 15):
+  - Using same method: 181 days
+
+**Step 2: Calculate accrued interest**
+
+$$
+\text{Accrued Interest} = \$25 \times \frac{85}{181} = \$25 \times 0.4696 = \$11.74
+$$
+
+**Step 3: Calculate clean price in dollars**
+
+$$
+\text{Clean Price} = 98.75\% \times \$1,000 = \$987.50
+$$
+
+**Step 4: Calculate dirty price**
+
+$$
+\text{Dirty Price} = \$987.50 + \$11.74 = \$999.24
+$$
+
+**Timeline**:
+
+```
+Jan 15         Apr 10              Jul 15
+   |-------------|------------------|
+   Last coupon   Purchase           Next coupon
+   
+   |<-- 85 days -->|<-- 96 days -->|
+   (Accrued to seller) (Owned by buyer)
+   
+   Total period: 181 days
+   Accrued fraction: 85/181 = 46.96%
+```
+
+**Answers**:
+1. Accrued interest: **$11.74**
+2. Dirty price: **$999.24**
+3. See timeline above
+
+**Key insight**: The seller held the bond for 85/181 ≈ 47% of the coupon period, so they're entitled to about 47% of the $25 coupon payment.
+:::
+
+---
+
+## Exercise 3: Value Function Graphing
+
+::: {.callout-note icon=true}
+## Problem
+Consider a simple 3-year investment with the following cashflows:
+
+| Time | Cashflow |
+|------|----------|
+| 0 | −$5,000 |
+| 1 | +$2,000 |
+| 2 | +$2,000 |
+| 3 | +$2,500 |
+
+Assume an **interest rate of 8%** per year.
+
+**Tasks**:
+1. Calculate $V(0)$ (NPV)
+2. Calculate $V(1)$ (value at end of year 1)
+3. Calculate $V(2)$ (value at end of year 2)
+4. Calculate $V(3)$ (value at end of year 3)
+5. Sketch the value function $V(t)$ over time
+6. Interpret: Is this a good investment?
+
+**Related Chapter**: [Value Function](value_function.qmd)
+:::
+
+### Solution {.unnumbered}
+
+::: {.callout-tip icon=false collapse="true"}
+## Click to reveal solution
+
+**1. Calculate $V(0)$ (NPV)**
+
+$$
+\begin{aligned}
+V(0) &= -5000 + \frac{2000}{1.08} + \frac{2000}{1.08^2} + \frac{2500}{1.08^3} \\
+&= -5000 + 1851.85 + 1714.68 + 1984.25 \\
+&= \$550.78
+\end{aligned}
+$$
+
+**2. Calculate $V(1)$**
+
+Method: Accumulate $V(0)$ one year forward, or equivalently:
+
+$$
+\begin{aligned}
+V(1) &= (-5000 \times 1.08 + 2000) + \frac{2000}{1.08} + \frac{2500}{1.08^2} \\
+&= (-5400 + 2000) + 1851.85 + 2143.35 \\
+&= -3400 + 3995.20 \\
+&= \$595.20
+\end{aligned}
+$$
+
+Or: $V(1) = V(0) \times 1.08 = 550.78 \times 1.08 = 594.84$ (slight rounding difference)
+
+**3. Calculate $V(2)$**
+
+$$
+\begin{aligned}
+V(2) &= [(-5000 \times 1.08 + 2000) \times 1.08 + 2000] + \frac{2500}{1.08} \\
+&= (-3400 \times 1.08 + 2000) + 2314.81 \\
+&= (-3672 + 2000) + 2314.81 \\
+&= -1672 + 2314.81 \\
+&= \$642.81
+\end{aligned}
+$$
+
+**4. Calculate $V(3)$**
+
+$$
+\begin{aligned}
+V(3) &= [(-5000 \times 1.08 + 2000) \times 1.08 + 2000] \times 1.08 + 2500 \\
+&= (-1672 \times 1.08) + 2500 \\
+&= -1805.76 + 2500 \\
+&= \$694.24
+\end{aligned}
+$$
+
+**5. Value Function Summary**
+
+| Time | $V(t)$ | Calculation |
+|------|--------|-------------|
+| 0 | $550.78 | NPV (all cashflows discounted) |
+| 1 | $595.20 | After first cashflow + interest |
+| 2 | $642.81 | After second cashflow + interest |
+| 3 | $694.24 | Final accumulated value |
+
+**Sketch**:
+
+```
+V(t)
+$700 +                                    * (694)
+     |                              * (643)
+$600 +                        * (595)
+     |                  * (551)
+$500 +            /
+     |          /
+     |        /  
+     |      /    Cashflows cause jumps
+     |    /      Interest causes smooth growth
+     +--+----+----+----+----+----+----+---> Time
+        0    1    2    3
+```
+
+**6. Interpretation**
+
+- **NPV = $550.78 > 0** → This is a **good investment**!
+- The value grows over time (even though we're in negative territory initially)
+- By the end, we've earned $694.24 on our $5,000 investment over 3 years
+- Effective return: $(694.24/5000)^{1/3} - 1 \approx 4.45\%$ ... wait, this doesn't match our 8% rate!
+  
+**Wait, let's reconsider**: The final value $V(3) = 694.24$ represents the NPV accumulated forward. The actual final wealth is the sum of all cashflows accumulated:
+
+$$
+\begin{aligned}
+\text{Final wealth} &= -5000 \times 1.08^3 + 2000 \times 1.08^2 + 2000 \times 1.08 + 2500 \\
+&= -6298.56 + 2332.80 + 2160 + 2500 \\
+&= \$694.24
+\end{aligned}
+$$
+
+So $V(3) = \$694.24$ is indeed the profit after all compounding!
+
+**Key insight**: The value function smoothly tracks your financial position over time, growing via interest and jumping at cashflow moments.
+:::
+
+---
+
+## Exercise 4: Compare Day Count Conventions
+
+::: {.callout-note icon=true}
+## Problem
+You're analyzing the **accrued interest** on a bond for the period from **March 1, 2025 to August 15, 2025**.
+
+The bond pays a **semi-annual coupon of $30** and uses a **182-day coupon period** (March 1 to August 31).
+
+Calculate the accrued interest (as of August 15) using each of the following conventions:
+
+1. **ACT/ACT** (actual days / actual days in period)
+2. **ACT/360** (actual days / 360)
+3. **30/360** (assume 30 days per month)
+
+**Questions**:
+- Which convention gives the highest accrued interest?
+- Why do different conventions exist?
+
+**Related Chapters**: [Bonds](bonds.qmd), [Interest & Discount Rates](interest_rates.qmd)
+:::
+
+### Solution {.unnumbered}
+
+::: {.callout-tip icon=false collapse="true"}
+## Click to reveal solution
+
+**First, count the days**:
+
+**Actual days from March 1 to August 15**:
+- March: 31 days (from Mar 1 to Mar 31)
+- April: 30 days
+- May: 31 days
+- June: 30 days
+- July: 31 days
+- August 1-15: 15 days
+- **Total**: $31 + 30 + 31 + 30 + 31 + 15 = 168$ days
+
+Actually, let's be more careful. From March 1 to August 15:
+- March 1 is day 0, March 2 is day 1, etc.
+- March: 30 days remaining (Mar 2 through Mar 31)
+- April: 30 days
+- May: 31 days
+- June: 30 days
+- July: 31 days
+- August 1-15: 15 days
+- **Total**: $30 + 30 + 31 + 30 + 31 + 15 = 167$ days
+
+**Method 1: ACT/ACT**
+
+$$
+\text{AI}_{\text{ACT/ACT}} = \$30 \times \frac{167}{182} = \$30 \times 0.9176 = \$27.53
+$$
+
+**Method 2: ACT/360**
+
+Using 360-day year, but actual days elapsed:
+
+$$
+\text{AI}_{\text{ACT/360}} = \$30 \times \frac{167}{180} = \$30 \times 0.9278 = \$27.83
+$$
+
+Wait, we need to be careful. For ACT/360, we're comparing actual days to a 360-day basis. The coupon period in this convention would be:
+
+March 1 to August 31 = actual days ≈ 184 days, but under 360-day year convention:
+- 6 months = $\frac{6}{12} \times 360 = 180$ days
+
+So:
+$$
+\text{AI}_{\text{ACT/360}} = \$30 \times \frac{167}{180} = \$30 \times 0.9278 = \$27.83
+$$
+
+**Method 3: 30/360**
+
+Under 30/360 convention:
+- Each month = 30 days
+- March 1 to August 15 = 5 full months + 14 days
+- Days = $5 \times 30 + 14 = 164$ days
+- Full period (March 1 to August 31) = $6 \times 30 = 180$ days
+
+$$
+\text{AI}_{30/360} = \$30 \times \frac{164}{180} = \$30 \times 0.9111 = \$27.33
+$$
+
+**Summary Table**:
+
+| Convention | Days Elapsed | Days in Period | Accrued Interest |
+|------------|--------------|----------------|------------------|
+| ACT/ACT | 167 | 182 | **$27.53** |
+| ACT/360 | 167 | 180 | **$27.83** |
+| 30/360 | 164 | 180 | **$27.33** |
+
+**Answers**:
+1. **ACT/360 gives the highest** accrued interest ($27.83)
+2. **30/360 gives the lowest** ($27.33)
+3. Difference: $27.83 - $27.33 = **$0.50** (about 1.8% difference)
+
+**Why different conventions exist**:
+- **Historical**: Before computers, 30/360 made hand calculations easier
+- **Market standard**: Different markets evolved different practices
+- **ACT/ACT**: Most accurate, used for government bonds
+- **30/360**: Simpler, used for corporate bonds
+- **ACT/360**: Common in money markets (historical convention)
+
+**Key insight**: Always verify which day count convention applies! The differences can be material for large positions.
+:::
+
+---
+
+## Bonus Exercise: Comprehensive Problem
+
+::: {.callout-note icon=true}
+## Challenge Problem
+You're evaluating a **real estate investment**:
+
+- **Purchase price**: $250,000 (today, $t=0$)
+- **Rental income**: $1,500/month (assume year-end lump sums: $18,000/year)
+- **Expenses**: $4,000/year (maintenance, property tax)
+- **Holding period**: 5 years
+- **Sale price**: $300,000 (at $t=5$)
+- **Required return**: 8% per year
+
+**Tasks**:
+1. Calculate the **net annual cashflow** (years 1-4)
+2. Calculate the **final year cashflow** (year 5)
+3. Calculate the **NPV** of this investment
+4. Should you invest? Explain.
+5. What sale price at year 5 would make NPV = 0 (break-even)?
+
+**Related Chapters**: [Basic Notions](basic_notions.qmd), [Value Function](value_function.qmd)
+:::
+
+### Solution {.unnumbered}
+
+::: {.callout-tip icon=false collapse="true"}
+## Click to reveal solution
+
+**1. Net annual cashflow (years 1-4)**
+
+$$
+\text{Net annual CF} = \text{Rental income} - \text{Expenses} = \$18,000 - \$4,000 = \$14,000
+$$
+
+**2. Final year cashflow (year 5)**
+
+$$
+\text{Year 5 CF} = \text{Net rental} + \text{Sale proceeds} = \$14,000 + \$300,000 = \$314,000
+$$
+
+**3. Calculate NPV**
+
+$$
+\begin{aligned}
+\text{NPV} &= -250,000 + \frac{14,000}{1.08} + \frac{14,000}{1.08^2} + \frac{14,000}{1.08^3} + \frac{14,000}{1.08^4} + \frac{314,000}{1.08^5}
+\end{aligned}
+$$
+
+Calculate each term:
+- Year 1: $14,000 / 1.08 = 12,962.96$
+- Year 2: $14,000 / 1.1664 = 12,002.74$
+- Year 3: $14,000 / 1.2597 = 11,113.65$
+- Year 4: $14,000 / 1.3605 = 10,290.42$
+- Year 5: $314,000 / 1.4693 = 213,728.53$
+
+$$
+\text{NPV} = -250,000 + 12,963 + 12,003 + 11,114 + 10,290 + 213,729 = \$10,099
+$$
+
+**4. Should you invest?**
+
+**Yes!** NPV = $10,099 > 0, meaning this investment creates value. At the required 8% return, you'll earn about $10,000 more than breaking even.
+
+**5. Break-even sale price**
+
+Set NPV = 0 and solve for sale price $S$:
+
+$$
+0 = -250,000 + 14,000 \times a_{\overline{4}|8\%} + \frac{S + 14,000}{1.08^5}
+$$
+
+First, calculate the PV of years 1-4 rental income:
+$$
+14,000 \times \frac{1 - 1.08^{-4}}{0.08} = 14,000 \times 3.3121 = 46,369.40
+$$
+
+So:
+$$
+\begin{aligned}
+0 &= -250,000 + 46,369 + \frac{S + 14,000}{1.4693} \\
+203,631 &= \frac{S + 14,000}{1.4693} \\
+S + 14,000 &= 203,631 \times 1.4693 = 299,215 \\
+S &= 285,215
+\end{aligned}
+$$
+
+**Break-even sale price**: **$285,215**
+
+Since the expected sale price ($300,000) exceeds the break-even ($285,215), the investment is attractive.
+
+**Key insight**: Real estate investing involves multiple cashflow streams (rental income, expenses, sale proceeds). NPV analysis helps integrate all these into a single decision metric.
+:::
+
+---
+
+## Summary & Next Steps
+
+Congratulations on working through these exercises! Here's what you've practiced:
+
+✅ **Exercise 1**: Loan amortization and cashflow decomposition  
+✅ **Exercise 2**: Bond pricing with accrued interest  
+✅ **Exercise 3**: Value function calculation and interpretation  
+✅ **Exercise 4**: Day count convention comparisons  
+✅ **Bonus**: Comprehensive real estate NPV analysis  
+
+### To Deepen Your Understanding
+
+1. **Rework exercises** with different numbers
+2. **Create your own problems** using real scenarios (your car loan, rent vs. buy decisions)
+3. **Review related chapters** for concepts you found challenging
+4. **Use the [Cheat Sheet](cheat_sheet.qmd)** as a quick reference
+
+### Additional Practice Ideas
+
+- **Mortgage comparison**: Compare 15-year vs. 30-year mortgages
+- **Investment alternatives**: Stock with dividends vs. bonds
+- **Business case**: Evaluate a startup's cashflow projections
+- **Refinancing decision**: Should you refinance a loan at lower rates?
+
+::: {.callout-tip}
+## Keep Practicing!
+Financial mathematics is like learning a language—the more you practice, the more fluent you become. Try to solve at least one problem daily!
+:::
+
+---
+
+**Need to review?** Go back to any chapter:
+- [Basic Notions](basic_notions.qmd)
+- [Bonds](bonds.qmd)
+- [Value Function](value_function.qmd)
+- [Interest & Discount Rates](interest_rates.qmd)
+- [Cheat Sheet](cheat_sheet.qmd)

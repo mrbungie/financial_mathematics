@@ -1,0 +1,284 @@
+# Cheat Sheet {.unnumbered}
+
+::: {.callout-note icon=false}
+## 📋 Quick Reference Guide
+This one-page summary contains all essential formulas, conventions, and concepts from Financial Mathematics Class 1.
+:::
+
+---
+
+## 🔢 Core Formulas
+
+### Time Value of Money
+
+| Concept | Formula | Variables |
+|---------|---------|-----------|
+| **Future Value** | $FV = PV \times (1+i)^t$ | $PV$ = present value<br>$i$ = interest rate<br>$t$ = time |
+| **Present Value** | $PV = \frac{FV}{(1+i)^t}$ | $FV$ = future value |
+| **Discount Factor** | $v = \frac{1}{1+i}$ or $v^t = \frac{1}{(1+i)^t}$ | $v$ = one-period discount |
+| **Accumulation Factor** | $a(t) = (1+i)^t$ | Growth multiplier |
+
+### Net Present Value
+
+$$
+\text{NPV} = \sum_{t=0}^{n} \frac{C_t}{(1+i)^t}
+$$
+
+**Decision Rule**: Accept if NPV > 0, Reject if NPV < 0
+
+### Value Function
+
+$$
+V(t) = \sum_{t_i \leq t} C_i \cdot (1+i)^{t-t_i} + \sum_{t_j > t} \frac{C_j}{(1+i)^{t_j - t}}
+$$
+
+- First sum: Past cashflows accumulated to $t$
+- Second sum: Future cashflows discounted to $t$
+
+---
+
+## 💰 Annuities & Perpetuities
+
+| Type | Formula | Description |
+|------|---------|-------------|
+| **Annuity PV** | $PV = C \times \frac{1 - v^n}{i}$ | $n$ equal payments of $C$ |
+| **Annuity Factor** | $a_{\overline{n}|i} = \frac{1 - v^n}{i}$ | Standard notation |
+| **Perpetuity PV** | $PV = \frac{C}{i}$ | Infinite equal payments |
+| **Growing Perpetuity** | $PV = \frac{C}{i - g}$ | Growth rate $g < i$ |
+
+---
+
+## 📊 Interest Rate Conventions
+
+### Effective Annual Rate
+
+$$
+\text{EAR} = \left(1 + \frac{r}{m}\right)^m - 1
+$$
+
+Where: $r$ = nominal rate, $m$ = compounding periods per year
+
+### Compounding Frequencies
+
+| Frequency | $m$ | Example (12% nominal) |
+|-----------|-----|-----------------------|
+| Annual | 1 | 12.00% effective |
+| Semi-annual | 2 | 12.36% effective |
+| Quarterly | 4 | 12.55% effective |
+| Monthly | 12 | 12.68% effective |
+| Continuous | ∞ | $e^{0.12} - 1 = 12.75\%$ |
+
+### Continuous Compounding
+
+$$
+FV = PV \times e^{rt} \quad \text{and} \quad PV = FV \times e^{-rt}
+$$
+
+---
+
+## 📅 Day Count Conventions
+
+| Convention | Year | Period Calculation | Usage |
+|------------|------|-------------------|--------|
+| **ACT/ACT** | Actual days (365/366) | Actual days | US Treasuries |
+| **ACT/360** | 360 days | Actual days | Money markets, loans |
+| **30/360** | 360 days | 30 days/month | Corporate bonds |
+
+### Accrued Interest
+
+$$
+\text{AI} = C \times \frac{\text{days since last coupon}}{\text{days in period}}
+$$
+
+---
+
+## 🎯 Bond Pricing
+
+### Components
+
+| Term | Definition |
+|------|------------|
+| **Face Value** | Principal repaid at maturity (typically $1,000) |
+| **Coupon Rate** | Annual interest rate on face value |
+| **Coupon Payment** | $C = \text{Face Value} \times \text{Coupon Rate}$ |
+| **Clean Price** | Quoted price (excludes accrued interest) |
+| **Dirty Price** | Invoice price = Clean + Accrued Interest |
+
+### Bond Cashflow Pattern
+
+```{mermaid}
+%%| fig-width: 8
+%%| fig-height: 1.5
+timeline
+    title Bond Cashflows (Investor View)
+    t=0 : -Price (Buy)
+    t=1,2,...,n-1 : +Coupons
+    t=n : +Final Coupon + Face Value
+```
+
+---
+
+## 💵 Cashflow Conventions
+
+### Sign Convention
+
+| Direction | Sign | Perspective |
+|-----------|------|-------------|
+| **Inflow** (receive) | **+** (positive) | <span style="color:green">● Green ↑</span> |
+| **Outflow** (pay) | **−** (negative) | <span style="color:red">● Red ↓</span> |
+
+::: {.callout-warning}
+**Critical**: Always establish whose perspective (investor, borrower, company, etc.) and maintain consistency!
+:::
+
+### Cashflow Patterns
+
+| Pattern | Structure | Example |
+|---------|-----------|---------|
+| **Investment** | − then + | Buy stock, then dividends + sale |
+| **Financing** | + then − | Receive loan, then repayments |
+
+---
+
+## 🔄 Relationship Diagram
+
+```{=latex}
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+    box/.style={rectangle, draw=black!60, fill=blue!10, thick, minimum width=2.5cm, minimum height=1cm, align=center},
+    arrow/.style={->, >=stealth, thick}
+]
+
+% Central concept
+\node[box, fill=yellow!20] (tvm) at (5,2) {\textbf{Time Value}\\\textbf{of Money}};
+
+% Surrounding concepts
+\node[box] (acc) at (1,4) {Accumulation\\$(1+i)^t$};
+\node[box] (disc) at (9,4) {Discount\\$v^t = (1+i)^{-t}$};
+\node[box] (npv) at (1,0) {NPV\\$V(0)$};
+\node[box] (fv) at (9,0) {Future Value\\$V(T)$};
+
+% Arrows
+\draw[arrow] (tvm) -- (acc) node[midway,left,font=\small] {Forward};
+\draw[arrow] (tvm) -- (disc) node[midway,right,font=\small] {Backward};
+\draw[arrow] (tvm) -- (npv) node[midway,left,font=\small] {At $t=0$};
+\draw[arrow] (tvm) -- (fv) node[midway,right,font=\small] {At $t=T$};
+
+% Connecting arrows
+\draw[arrow, dashed, red] (acc) to[bend left=20] node[above,font=\tiny] {Inverse} (disc);
+\draw[arrow, dashed, red] (disc) to[bend left=20] (acc);
+\draw[arrow, dashed, blue] (npv) to[bend right=20] node[below,font=\tiny] {Timeline} (fv);
+\draw[arrow, dashed, blue] (fv) to[bend right=20] (npv);
+\end{tikzpicture}
+\end{figure}
+```
+
+---
+
+## 🧮 Quick Calculations
+
+### Rule of 72 (Approximation)
+
+**Time to double** $\approx \frac{72}{\text{interest rate (\%)}}$
+
+Example: At 6% interest, money doubles in $\approx 72/6 = 12$ years.
+
+### Exact Doubling Time
+
+$$
+t = \frac{\ln(2)}{\ln(1+i)}
+$$
+
+---
+
+## 🎨 Timeline Icons
+
+Quick reference for drawing cashflow diagrams:
+
+| Symbol | Meaning |
+|--------|---------|
+| → | Time axis (left to right) |
+| <span style="color:green">↑</span> | Inflow (positive cashflow) |
+| <span style="color:red">↓</span> | Outflow (negative cashflow) |
+| ● | Point in time |
+| \|--\| | Time period/interval |
+
+---
+
+## ⚠️ Common Pitfalls
+
+::: {.callout-warning}
+### Mistakes to Avoid
+
+1. **Sign errors**: Mixing up inflows and outflows
+2. **Period mismatch**: Using annual rate with monthly cashflows
+3. **Perspective confusion**: Switching between investor/borrower view mid-calculation
+4. **Forgetting compounding**: Treating $6\%$ semi-annual as $6\%$ annual
+5. **Wrong discount rate**: Using risk-free rate for risky cashflows
+6. **NPV timing**: Forgetting that NPV is at $t=0$, not $t=1$
+:::
+
+---
+
+## 📈 Key Relationships
+
+### Interest Rate Components
+
+$$
+i_{\text{total}} = r_{\text{real}} + \pi_{\text{expected}} + \text{risk premium} + \text{liquidity premium}
+$$
+
+### Fisher Equation
+
+$$
+1 + i_{\text{nominal}} = (1 + r_{\text{real}})(1 + \pi)
+$$
+
+Approximation: $i \approx r + \pi$
+
+---
+
+## 🎓 Exam Tips
+
+### Quick Checks
+
+1. **Units**: All rates and times in consistent units (annual with annual, monthly with monthly)
+2. **Signs**: Do a sanity check—are you paying or receiving?
+3. **Magnitudes**: Does your answer make sense? (e.g., NPV shouldn't be 1000× the cashflows)
+4. **Zero test**: If $i=0$, formulas should reduce to simple sums
+
+### Calculator Shortcuts
+
+- **Compound interest**: Use $(1+i)^t$ directly, not repeated multiplication
+- **NPV**: Most financial calculators have built-in NPV function
+- **Annuities**: Use annuity factor formula, not term-by-term
+
+---
+
+## 📚 Formula Summary Card
+
+::: {.callout-note icon=false}
+### The "Big 7" Formulas
+
+1. $FV = PV \times (1+i)^t$ — Future value
+2. $PV = \frac{FV}{(1+i)^t}$ — Present value  
+3. $\text{NPV} = \sum \frac{C_t}{(1+i)^t}$ — Net present value  
+4. $\text{EAR} = (1 + r/m)^m - 1$ — Effective rate  
+5. $PV_{\text{annuity}} = C \times \frac{1-v^n}{i}$ — Annuity  
+6. $PV_{\text{perpetuity}} = \frac{C}{i}$ — Perpetuity  
+7. $\text{Dirty Price} = \text{Clean Price} + \text{Accrued Interest}$ — Bonds  
+
+**Master these, and you've mastered the course!**
+:::
+
+---
+
+::: {.callout-tip}
+## 💡 Pro Tip
+Print this page and keep it handy during problem-solving. Better yet, recreate it by hand to reinforce your understanding!
+:::
+
+---
+
+**Ready to Practice?** Head to [Exercises](exercises.qmd) to test your knowledge!

@@ -1,0 +1,56 @@
+# Welcome {.unnumbered}
+
+## About This Guide
+
+Welcome to **Financial Mathematics - Class 1**, a student-friendly reinterpretation of traditional financial mathematics lecture materials. This guide is designed specifically for MBA students with varied quantitative backgrounds.
+
+## What Makes This Different?
+
+Instead of heavy mathematical notation, we emphasize:
+
+- 📊 **Clear visual diagrams** connecting math to real-world finance
+- 📅 **Tables & timelines** for intuitive understanding
+- 📝 **Practical examples** from everyday finance
+- 🎯 **Cheat sheets** for quick reference
+- 💪 **Exercises** to build confidence
+
+## Navigation
+
+This guide is organized into focused chapters:
+
+1. **Basic Notions** - Cashflows, timelines, and sign conventions
+2. **Bonds** - Coupon bonds, accrued interest, clean vs dirty prices
+3. **Value Function** - Understanding money over time
+4. **Interest & Discount Rates** - Accumulation and discount factors
+5. **Cheat Sheet** - One-page reference for all key formulas
+6. **Exercises** - Practice problems with solutions
+
+## Learning Approach
+
+Throughout this guide, we use:
+
+::: {.callout-note icon=true}
+## Definition
+For formal definitions and terminology
+:::
+
+::: {.callout-tip icon=true}
+## Intuition
+For real-world analogies and "why this matters"
+:::
+
+::: {.callout-important icon=true}
+## Key Formula
+For essential formulas you'll use repeatedly
+:::
+
+::: {.callout-warning icon=true}
+## Common Pitfall
+For mistakes to avoid
+:::
+
+## Getting Started
+
+Begin with [Chapter 1: Basic Notions](basic_notions.qmd) to build your foundation, or jump directly to any chapter that interests you. The [Cheat Sheet](cheat_sheet.qmd) provides a quick reference once you're familiar with the concepts.
+
+Let's dive in! 🚀

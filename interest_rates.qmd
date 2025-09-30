@@ -1,0 +1,444 @@
+# Interest & Discount Rates
+
+## Introduction
+
+Interest rates are the **engine** of financial mathematics. They answer the fundamental question: *"What is the price of time?"* In this chapter, we'll explore how interest rates work, how they relate to discount factors, and how they transform money across time.
+
+## The Time Value of Money
+
+::: {.callout-note icon=true}
+## Core Principle: Time Value of Money
+**A dollar today is worth more than a dollar tomorrow.**
+
+Why? Three main reasons:
+
+1. **Opportunity cost**: Today's dollar can be invested to earn returns
+2. **Inflation**: Future dollars have less purchasing power
+3. **Risk**: Future payments are uncertain
+:::
+
+Interest rates **quantify** this time value: they tell us precisely *how much more* a dollar today is worth compared to a dollar later.
+
+## Two Directions: Accumulation vs. Discount
+
+Think of interest rates as a **bidirectional lens** for viewing money across time:
+
+::: {.callout-tip icon=true}
+## The "Money Lens" Analogy
+
+**🔭 Accumulation = Telescope (Forward View)**  
+Looking into the future: *"If I invest $100 today, how much will I have later?"*  
+Answer: **More** (money grows)
+
+**🔬 Discount = Microscope (Backward View)**  
+Looking back to present: *"If I need $100 in the future, how much should I set aside today?"*  
+Answer: **Less** (future dollars are worth less today)
+:::
+
+### Visual: Mirrored Diagrams
+
+```{=latex}
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.1]
+% ACCUMULATION (top half)
+\node[font=\large\bfseries] at (5,4) {ACCUMULATION (Forward) 🔭};
+
+% Time axis
+\draw[thick,->] (0,2.5) -- (10,2.5) node[right] {Time};
+\draw (0,2.6) -- (0,2.4) node[below] {Today};
+\draw (8,2.6) -- (8,2.4) node[below] {Future};
+
+% Amount growth
+\filldraw[blue!30] (0.5,1.5) rectangle (1.5,2.3);
+\node at (1,1.9) {\$100};
+\draw[->,ultra thick,blue] (1.8,1.9) -- (6,1.9);
+\node[above] at (4,1.9) {Grow at rate $i$};
+\filldraw[green!30] (6.5,1) rectangle (9,2.8);
+\node at (7.75,1.9) {\$121};
+\node[font=\small] at (7.75,1.4) {(2 years @ 10\%)};
+
+% Formula
+\node[font=\large] at (5,0.5) {$FV = PV \times (1+i)^t$};
+
+% Separator
+\draw[thick,dashed] (-1,0) -- (11,0);
+
+% DISCOUNT (bottom half)
+\node[font=\large\bfseries] at (5,-1) {DISCOUNT (Backward) 🔬};
+
+% Time axis (reversed direction emphasis)
+\draw[thick,<-] (0,-2.5) -- (10,-2.5) node[right] {Time};
+\draw (0,-2.6) -- (0,-2.4) node[above] {Today};
+\draw (8,-2.6) -- (8,-2.4) node[above] {Future};
+
+% Amount shrinkage
+\filldraw[blue!30] (0.5,-2.3) rectangle (1.5,-3.5);
+\node at (1,-2.9) {\$82.64};
+\draw[<-,ultra thick,red] (1.8,-2.9) -- (6,-2.9);
+\node[below] at (4,-2.9) {Discount at rate $i$};
+\filldraw[green!30] (6.5,-2.3) rectangle (9,-3.5);
+\node at (7.75,-2.9) {\$100};
+\node[font=\small] at (7.75,-3.4) {(needed in 2 years)};
+
+% Formula
+\node[font=\large] at (5,-4.5) {$PV = \frac{FV}{(1+i)^t}$};
+\end{tikzpicture}
+\end{figure}
+```
+
+## Accumulation: Growing Money Forward
+
+::: {.callout-note icon=true}
+## Definition: Accumulation Factor
+The **accumulation factor** $a(t)$ tells you how much $1$ today grows to at time $t$:
+
+$$
+a(t) = (1 + i)^t
+$$
+
+Where $i$ is the interest rate per period.
+:::
+
+### Example: Accumulation
+
+**Question**: You invest $1,000$ today at 6\% annual interest. How much will you have in 5 years?
+
+**Solution**:
+$$
+FV = 1000 \times (1.06)^5 = 1000 \times 1.3382 = \$1,338.20
+$$
+
+**Timeline View**:
+
+| Time (years) | 0 | 1 | 2 | 3 | 4 | 5 |
+|--------------|---|---|---|---|---|---|
+| Amount | $1,000.00 | $1,060.00 | $1,123.60 | $1,191.02 | $1,262.48 | $1,338.23 |
+| Growth | — | +$60 | +$63.60 | +$67.42 | +$71.46 | +$75.75 |
+
+::: {.callout-tip icon=true}
+## Notice
+Each year's growth is **larger** than the previous year—that's **compound interest** at work! You earn interest not just on your original $1,000, but also on previously earned interest.
+:::
+
+## Discount: Shrinking Money Backward
+
+::: {.callout-note icon=true}
+## Definition: Discount Factor
+The **discount factor** $v^t$ tells you how much $1$ at time $t$ is worth today:
+
+$$
+v^t = \frac{1}{(1+i)^t}
+$$
+
+Alternatively, we can define $v = \frac{1}{1+i}$ (the one-period discount factor), so:
+
+$$
+v^t = \left(\frac{1}{1+i}\right)^t
+$$
+:::
+
+### Example: Discounting
+
+**Question**: You need $1,000$ in 5 years. If the interest rate is 6\%, how much should you set aside today?
+
+**Solution**:
+$$
+PV = \frac{1000}{(1.06)^5} = \frac{1000}{1.3382} = \$747.26
+$$
+
+**Interpretation**: If you invest $747.26$ today at 6\%, it will grow to exactly $1,000$ in 5 years.
+
+### Discount Rate vs. Interest Rate
+
+::: {.callout-important icon=true}
+## Key Relationship
+For the **same** time value of money:
+
+- **Interest rate** $i$: Used for accumulation (moving forward)
+- **Discount rate** $i$: Same rate, used for discounting (moving backward)
+- **Discount factor** $v = \frac{1}{1+i}$
+
+They're two sides of the same coin:
+
+$$
+(1+i) \times v = (1+i) \times \frac{1}{1+i} = 1
+$$
+:::
+
+## Effective vs. Nominal Rates
+
+Real-world interest rates come in different flavors depending on **compounding frequency**.
+
+### Effective Annual Rate (EAR)
+
+::: {.callout-note icon=true}
+## Definition: Effective Annual Rate
+The **effective annual rate** is the actual annual return, accounting for compounding within the year.
+
+If interest is compounded $m$ times per year at rate $i_m$ per period:
+
+$$
+\text{EAR} = \left(1 + \frac{i_m}{m}\right)^m - 1
+$$
+:::
+
+### Example: Quarterly Compounding
+
+**Given**: Bank offers 8\% annual rate, compounded quarterly (4 times/year).
+
+**What's the effective annual rate?**
+
+- Quarterly rate: $i_4 = 8\% / 4 = 2\%$ per quarter
+- Effective annual rate:
+
+$$
+\text{EAR} = (1.02)^4 - 1 = 1.0824 - 1 = 8.24\%
+$$
+
+::: {.callout-tip icon=true}
+## Interpretation
+Due to compounding, you effectively earn **8.24\%** per year, not just 8\%. The more frequent the compounding, the higher the effective rate.
+:::
+
+### Compounding Frequency Comparison
+
+For a **nominal rate of 12\%** per year:
+
+| Compounding | Formula | Effective Rate |
+|-------------|---------|----------------|
+| Annual | $(1.12)^1 - 1$ | **12.00\%** |
+| Semi-annual | $(1.06)^2 - 1$ | **12.36\%** |
+| Quarterly | $(1.03)^4 - 1$ | **12.55\%** |
+| Monthly | $(1.01)^{12} - 1$ | **12.68\%** |
+| Daily | $(1 + 0.12/365)^{365} - 1$ | **12.75\%** |
+| Continuous | $e^{0.12} - 1$ | **12.75\%** |
+
+```{=latex}
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+% Axes
+\draw[->] (0,0) -- (11,0) node[right] {Compounding Frequency};
+\draw[->] (0,0) -- (0,5) node[above] {Effective Rate (\%)};
+
+% Y-axis labels
+\foreach \y/\label in {0/0, 1/12.0, 2/12.2, 3/12.4, 4/12.6, 5/12.8}
+    \node[left] at (-0.3,\y) {\label};
+
+% Bars
+\fill[blue!60] (1,0) rectangle (2,1);
+\node[below] at (1.5,-0.3) {Annual};
+
+\fill[blue!60] (3,0) rectangle (4,2.4);
+\node[below,font=\small] at (3.5,-0.3) {Semi};
+
+\fill[blue!60] (5,0) rectangle (6,3.3);
+\node[below,font=\small] at (5.5,-0.3) {Quarterly};
+
+\fill[blue!60] (7,0) rectangle (8,4.2);
+\node[below,font=\small] at (7.5,-0.3) {Monthly};
+
+\fill[blue!60] (9,0) rectangle (10,4.7);
+\node[below,font=\small] at (9.5,-0.3) {Daily};
+
+% Reference line at 12%
+\draw[red,dashed,thick] (0,1) -- (11,1);
+\node[right,red] at (11,1) {Nominal};
+
+% Asymptote
+\draw[green!50!black,dashed,thick] (0,4.7) -- (11,4.7);
+\node[right,green!50!black] at (11,4.7) {Continuous limit};
+\end{tikzpicture}
+\end{figure}
+```
+
+## Continuous Compounding
+
+As compounding becomes more frequent, the effective rate approaches a limit:
+
+::: {.callout-note icon=true}
+## Definition: Continuous Compounding
+When interest compounds **continuously** (infinitely often), the accumulation formula becomes:
+
+$$
+FV = PV \times e^{rt}
+$$
+
+Where:
+- $e \approx 2.71828$ (Euler's number)
+- $r$ = continuously compounded rate
+- $t$ = time
+:::
+
+### Example: Continuous vs. Annual
+
+**Invest $1,000 at 10\% for 3 years:**
+
+| Compounding | Formula | Future Value |
+|-------------|---------|--------------|
+| Annual | $1000 \times (1.10)^3$ | **$1,331.00** |
+| Continuous | $1000 \times e^{0.10 \times 3}$ | **$1,349.86** |
+
+**Difference**: $1,349.86 − $1,331.00 = **$18.86** extra from continuous compounding.
+
+## Interest Rate Decomposition
+
+Real-world interest rates have multiple components:
+
+::: {.callout-important icon=true}
+## Interest Rate Components
+
+$$
+i = r_f + \text{inflation} + \text{risk premium} + \text{liquidity premium}
+$$
+
+Where:
+- **$r_f$**: Real risk-free rate (time preference)
+- **Inflation**: Compensation for loss of purchasing power
+- **Risk premium**: Compensation for default risk
+- **Liquidity premium**: Compensation for illiquidity
+:::
+
+### Example: Corporate Bond Rate
+
+A corporate bond might have:
+
+- Risk-free rate: 2%
+- Expected inflation: 3%
+- Default risk premium: 2%
+- Liquidity premium: 1%
+- **Total rate**: 2% + 3% + 2% + 1% = **8%**
+
+## Present Value of Annuities
+
+A common cashflow pattern is an **annuity**: equal payments at regular intervals.
+
+::: {.callout-note icon=true}
+## Definition: Annuity
+An **annuity** is a series of equal payments $C$ made at regular intervals for $n$ periods.
+
+**Present value of an annuity**:
+
+$$
+PV = C \times \frac{1 - v^n}{i} = C \times \frac{1 - (1+i)^{-n}}{i}
+$$
+
+This is often denoted as $PV = C \times a_{\overline{n}|i}$ where $a_{\overline{n}|i}$ is the annuity factor.
+:::
+
+### Example: Mortgage Payment
+
+**You take a $200,000 mortgage at 5\% for 30 years. What's the monthly payment?**
+
+Given:
+- $PV = 200,000$
+- $i = 5\% / 12 = 0.4167\%$ per month
+- $n = 30 \times 12 = 360$ months
+
+Rearranging: $C = PV \times \frac{i}{1 - (1+i)^{-n}}$
+
+$$
+C = 200,000 \times \frac{0.004167}{1 - (1.004167)^{-360}} = 200,000 \times 0.00537 = \$1,073.64
+$$
+
+**Your monthly payment**: **$1,073.64**
+
+### Annuity Timeline
+
+```{=latex}
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.9]
+% Time axis
+\draw[thick,->] (0,0) -- (13,0) node[right] {Time};
+\foreach \x/\label in {0/0, 2/1, 4/2, 6/3, 10/n-1, 12/n}
+    \draw (\x,0.1) -- (\x,-0.1) node[below] {\label};
+
+% Equal payments
+\foreach \x in {2,4,6,10,12} {
+    \draw[->,blue!70,very thick] (\x,-1) -- (\x,0.5);
+    \node[below,blue!70] at (\x,-1) {$C$};
+}
+
+% Dots
+\node at (8,0.25) {$\cdots$};
+\node at (8,-0.5) {$\cdots$};
+
+% Label
+\node[blue!70,font=\bfseries] at (6,-2) {$n$ equal payments of $C$ each};
+\node[red,font=\bfseries] at (6,1.2) {$PV = C \times a_{\overline{n}|i}$};
+\end{tikzpicture}
+\end{figure}
+```
+
+## Perpetuity: The Infinite Annuity
+
+::: {.callout-note icon=true}
+## Definition: Perpetuity
+A **perpetuity** is an annuity that continues forever.
+
+**Present value**:
+
+$$
+PV = \frac{C}{i}
+$$
+
+As $n \to \infty$, the annuity formula simplifies to this beautifully simple result.
+:::
+
+### Example: Preferred Stock
+
+A preferred stock pays $5 per share annually forever. If the required return is 8\%, what's it worth?
+
+$$
+PV = \frac{5}{0.08} = \$62.50
+$$
+
+## Summary Table: Key Formulas
+
+| Concept | Formula | Use |
+|---------|---------|-----|
+| **Accumulation** | $FV = PV \times (1+i)^t$ | Growing money forward |
+| **Discount** | $PV = FV \times (1+i)^{-t}$ | Bringing money to present |
+| **Discount factor** | $v = \frac{1}{1+i}$ | One-period discounting |
+| **Effective rate** | $(1 + i_m/m)^m - 1$ | Accounting for compounding |
+| **Continuous** | $FV = PV \times e^{rt}$ | Continuous compounding |
+| **Annuity PV** | $C \times \frac{1-v^n}{i}$ | Series of equal payments |
+| **Perpetuity PV** | $\frac{C}{i}$ | Forever payments |
+
+## Practical Insights
+
+::: {.callout-important icon=true}
+## Using the Right Rate
+
+**Always match**:
+- **Time period** of cashflows (monthly, annual, etc.)
+- **Compounding frequency** of the rate
+- **Risk level** (risk-free rate vs. risky rate)
+
+Example: For monthly mortgage payments, use monthly interest rate, not annual.
+:::
+
+::: {.callout-warning icon=true}
+## Common Mistakes
+
+1. **Mixing rates**: Using annual rate for monthly cashflows
+2. **Forgetting compounding**: Treating 6\% semi-annual as 6\% annual
+3. **Wrong perspective**: Confusing investor vs. borrower viewpoint
+4. **Sign errors**: Getting cashflow directions backward
+:::
+
+## Summary
+
+✅ **Interest rate** $i$ = price of time, quantifies time value of money  
+✅ **Accumulation** (forward) vs. **Discount** (backward) = two directions  
+✅ **Compound interest** = interest on interest (grows exponentially)  
+✅ **Effective rate** accounts for compounding frequency  
+✅ **Continuous compounding** = infinite frequency limit  
+✅ **Annuities** = equal periodic payments (closed-form PV formula)  
+✅ **Perpetuities** = infinite annuities ($PV = C/i$)  
+
+---
+
+**Next**: Check out the [Cheat Sheet](cheat_sheet.qmd) for a one-page reference of all key formulas!

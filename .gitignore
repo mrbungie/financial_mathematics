@@ -1,0 +1,44 @@
+# Quarto output directory
+_output/
+_site/
+_book/
+
+# Quarto cache
+/.quarto/
+_freeze/
+
+# LaTeX auxiliary files
+*.aux
+*.log
+*.out
+*.toc
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.bcf
+*.run.xml
+*.blg
+*.bbl
+
+# OS files
+.DS_Store
+Thumbs.db
+.Rhistory
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python (if using Python code chunks)
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# R (if using R code chunks)
+.Rproj.user/
+*.Rproj
+
+**/*.quarto_ipynb

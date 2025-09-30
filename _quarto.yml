@@ -1,0 +1,43 @@
+project:
+  type: book
+  output-dir: _output
+
+book:
+  title: "Financial Mathematics - Class 1"
+  subtitle: "A Student-Friendly Guide"
+  author: "MBA Program"
+  date: today
+  chapters:
+    - index.qmd
+    - basic_notions.qmd
+    - bonds.qmd
+    - value_function.qmd
+    - interest_rates.qmd
+    - cheat_sheet.qmd
+    - exercises.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    code-fold: false
+    html-math-method: mathjax
+  pdf:
+    documentclass: scrbook
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    geometry:
+      - margin=1in
+    include-in-header:
+      text: |
+        \usepackage{amsmath}
+        \usepackage{tikz}
+        \usetikzlibrary{arrows,positioning,calc,shapes}
+
+execute:
+  enabled: false
