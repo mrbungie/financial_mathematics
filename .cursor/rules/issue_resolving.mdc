@@ -1,0 +1,437 @@
+---
+description: formatting rules
+alwaysApply: false
+---
+## TikZ Implementation: Native LaTeX Approach
+
+### Critical Decision: Why NOT Use the Extension
+
+We explicitly **DO NOT** use the `quarto_tikz` extension (despite it being present in `_extensions/`). 
+
+**Reasoning**:
+1. Extension is designed for HTML rendering (TikZ → SVG via inkscape)
+2. For PDF-first projects, native LaTeX is simpler and more reliable
+3. Avoids external dependencies (inkscape, dvisvgm)
+4. Faster compilation
+5. Better integration with LaTeX workflow
+6. No filter errors
+
+**Do NOT add `filters: - tikz` to `_quarto.yml`**
+
+### Correct TikZ Syntax
+
+#### ✅ CORRECT (What We Use)
+
+```markdown
+```{=latex}
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.2]
+% TikZ code here
+\draw[->] (0,0) -- (5,0);
+\end{tikzpicture}
+\end{figure}
+```
+```
+
+**Key points**:
+- Fence: `{=latex}` (raw LaTeX block)
+- Wraps in `\begin{figure}...\end{figure}`
+- No `%%|` chunk options
+- Renders natively through LuaLaTeX
+
+#### ❌ INCORRECT (Do Not Use)
+
+```markdown
+<!-- WRONG - extension syntax -->
+```{.tikz}
+%%| fig-width: 8
+%%| fig-height: 3
+
+\begin{tikzpicture}
+% code
+\end{tikzpicture}
+```
+```
+
+This requires the filter and will cause errors with our setup.
+
+---
+
+## Configuration
+
+### Required in `_quarto.yml`
+
+```yaml
+format:
+  pdf:
+    include-in-header:
+      text: |
+        \usepackage{amsmath}
+        \usepackage{tikz}
+        \usetikzlibrary{arrows,positioning,calc,shapes}
+```
+
+### NOT Required
+
+```yaml
+# DO NOT ADD THIS
+filters:
+  - tikz
+```
+
+---
+
+## Diagram Strategy by Output Format
+
+### PDF Output (Primary)
+- **TikZ**: Use `{=latex}` blocks with native LaTeX
+- **Mathematical diagrams**: TikZ for timelines, graphs, visualizations
+- **Result**: High-quality vector graphics
+
+### HTML Output (Secondary)
+- **Mermaid**: Use for timelines, flowcharts
+- **TikZ blocks are hidden**: `{=latex}` only renders in PDF
+- **Acceptable trade-off**: PDF is primary target
+
+---
+
+## Common TikZ Patterns in This Project
+
+### 1. Timeline with Cashflows
+
+```latex
+\begin{tikzpicture}[scale=1.0]
+% Time axis
+\draw[thick,->] (0,0) -- (10,0) node[right] {Time};
+\foreach \x/\label in {0/0, 5/1, 10/2}
+    \draw (\x,0.1) -- (\x,-0.1) node[below] {$t=\label$};
+
+% Inflow (green, upward)
+\draw[->,green!60!black,very thick] (5,-1) -- (5,0.5);
+\node[below,green!60!black] at (5,-1) {+\$1,000};
+
+% Outflow (red, downward)
+\draw[->,red!70!black,very thick] (0,0.5) -- (0,-1);
+\node[above,red!70!black] at (0,0.7) {-\$500};
+\end{tikzpicture}
+```
+
+### 2. Value Function Graph
+
+```latex
+\begin{tikzpicture}[scale=1.3]
+% Axes with labels
+\draw[->] (0,0) -- (9,0) node[right] {Time};
+\draw[->] (0,0) -- (0,5) node[above] {$V(t)$ (\$)};
+
+% Y-axis tick marks
+\foreach \y/\label in {0/0, 1/1, 2/2}
+    \draw (-0.1,\y) -- (0.1,\y) node[left=3pt] {\label};
+
+% Plot line
+\draw[thick,blue] (0,2.04) -- (3,2.14) -- (6,2.25);
+
+% Data points
+\fill[blue] (0,2.04) circle (2pt) node[above right] {$V(0)=2.04$};
+\end{tikzpicture}
+```
+
+### 3. Boxes and Diagrams
+
+```latex
+\begin{tikzpicture}
+% Filled box
+\draw[thick,fill=blue!20] (0,0) rectangle (4,2);
+\node[align=center] at (2,1) {\textbf{Label}\\\$1,000};
+
+% Arrow between boxes
+\node[font=\Huge] at (5,1) {+};
+\end{tikzpicture}
+```
+
+---
+
+## Critical Lessons: Common Mistakes
+
+### Issue 1: Incorrect Graph Scales ⚠️
+
+**Problem**: Value function graph showed V(t) going negative when all values were positive.
+
+**Root Cause**: Y-axis range was -3 to +3, but actual values were ~2 to 2.25.
+
+**Fix**: Always check calculated values before plotting:
+- Calculate all V(t) values first
+- Set y-axis range to encompass actual values
+- Add buffer space above/below for clarity
+- Label axes with actual units
+
+**Example**:
+```latex
+% If values range from 2.04 to 2.25
+\draw[->] (0,-0.5) -- (0,3.5) node[above] {$V(t)$ (\$)};
+% NOT: \draw[->] (0,-3) -- (0,3) node[above] {$V(t)$};
+```
+
+### Issue 2: Nested Equation Environments ⚠️
+
+**Problem**: `align` inside `$$` causes LaTeX errors.
+
+**Fix**: Use `aligned` instead:
+```latex
+<!-- WRONG -->
+$$
+\begin{align}
+x &= 1 \\
+y &= 2
+\end{align}
+$$
+
+<!-- CORRECT -->
+$$
+\begin{aligned}
+x &= 1 \\
+y &= 2
+\end{aligned}
+$$
+```
+
+### Issue 3: Filter Errors ⚠️
+
+**Problem**: `quarto_tikz` extension causing "string expected, got nil" errors.
+
+**Fix**: Remove the filter, use native LaTeX (see above).
+
+---
+
+## Rendering Commands
+
+### Standard Rendering
+
+```bash
+# PDF (primary target)
+quarto render --to pdf
+
+# HTML (secondary)
+quarto render --to html
+
+# Both
+quarto render
+```
+
+### Verify TikZ Output
+
+```bash
+# Render and open
+quarto render --to pdf && open _output/Financial-Mathematics---Class-1.pdf
+```
+
+### Check for Errors
+
+```bash
+# Show last 30 lines of output
+quarto render --to pdf 2>&1 | tail -30
+```
+
+---
+
+## File Locations
+
+### Files with TikZ Diagrams
+- `basic_notions.qmd` - 2 diagrams (cashflow timelines)
+- `bonds.qmd` - 3 diagrams (bond cashflows, accrued interest)
+- `value_function.qmd` - 3 diagrams (value function graphs)
+- `interest_rates.qmd` - 3 diagrams (accumulation/discount, rates)
+- `cheat_sheet.qmd` - 1 diagram (relationship diagram)
+
+**Total**: 12 TikZ diagrams
+
+### Configuration
+- `_quarto.yml` - TikZ libraries, LaTeX settings
+
+### Documentation
+- `TIKZ_FIX_NOTES.md` - Detailed technical notes
+- `AGENTS_NOTES.md` - This file
+
+---
+
+## Diagram Content Guidelines
+
+### Colors
+- **Green** (`green!60!black`): Inflows, positive cashflows
+- **Red** (`red!70!black`): Outflows, negative cashflows
+- **Blue**: Value function lines, neutral elements
+- **Gray**: Reference lines, zero lines
+
+### Typography
+- **Axis labels**: `node[right] {Time}`, `node[above] {$V(t)$}`
+- **Data labels**: `node[above right] {$V(0)=2.04$}`
+- **Emphasis**: `font=\bfseries` or `font=\large`
+- **Currency**: Use `\$` for dollar signs in node text
+
+### Scale and Spacing
+- Standard scale: `[scale=1.0]` to `[scale=1.3]`
+- Axis arrows: `\draw[->]` or `\draw[thick,->]`
+- Arrow thickness: `very thick` or `ultra thick` for emphasis
+
+---
+
+## Troubleshooting
+
+### TikZ Not Rendering
+
+**Check**:
+1. Are you rendering to PDF? (TikZ won't show in HTML with our setup)
+2. Is the fence `{=latex}` not `{.tikz}`?
+3. Are TikZ libraries loaded in `_quarto.yml`?
+4. Any LaTeX syntax errors in the TikZ code?
+
+### LaTeX Compilation Errors
+
+**Common causes**:
+- Missing `\end{tikzpicture}`
+- Unescaped special characters (`$`, `%`, `&`)
+- Invalid node references
+- Missing required TikZ library
+
+**Check logs**:
+```bash
+quarto render --to pdf 2>&1 | grep -i error
+```
+
+### Wrong Diagram Output
+
+**Verify**:
+1. Calculate values manually before plotting
+2. Check axis scales match data range
+3. Verify sign conventions (positive/negative)
+4. Test with simple example first
+
+---
+
+## Best Practices for Future Changes
+
+### Before Modifying Diagrams
+
+1. **Understand the data**: Calculate values manually
+2. **Check existing patterns**: Look at similar diagrams in other files
+3. **Test incrementally**: Make small changes, render, verify
+4. **Preserve colors**: Keep the green/red convention for cashflows
+
+### When Adding New Diagrams
+
+1. **Start with simple example**: Basic shapes, then add complexity
+2. **Use consistent scaling**: Match other diagrams in same chapter
+3. **Add comments**: Explain what each section draws
+4. **Test early**: Render frequently during development
+
+### When Debugging
+
+1. **Isolate the problem**: Comment out sections to find error
+2. **Check similar working examples**: Compare with working diagrams
+3. **Verify LaTeX basics**: Test TikZ code in standalone LaTeX document
+4. **Read error messages**: LaTeX errors often indicate line numbers
+
+---
+
+## Alternative Approaches (NOT Used)
+
+### If You Need TikZ in Both HTML and PDF
+
+**Option 1**: Use the extension properly
+```bash
+quarto add danmackinlay/quarto_tikz
+# Then use {.tikz} blocks with %%| options
+# Requires: pdflatex, inkscape
+```
+
+**Option 2**: Pre-render to images
+```bash
+# Compile TikZ separately
+# Include as: ![Diagram](diagram.pdf)
+```
+
+**Option 3**: Use Mermaid for simpler diagrams
+```markdown
+```{mermaid}
+graph LR
+    A --> B
+```
+```
+
+### Why We Don't Use These
+
+- **Extension**: Adds complexity, dependencies, slower
+- **Pre-render**: Extra workflow step, harder to maintain
+- **Mermaid only**: Can't handle complex mathematical diagrams
+
+---
+
+## Quick Decision Tree
+
+**Need to add a diagram?**
+
+```
+Is it mathematical/financial (timelines, graphs, equations)?
+├─ Yes → Use TikZ with {=latex}
+└─ No → Is it a flowchart/process diagram?
+    ├─ Yes → Consider Mermaid
+    └─ No → Use TikZ for custom shapes
+
+Is diagram not rendering?
+├─ Check: Are you compiling to PDF?
+├─ Check: Is fence {=latex} not {.tikz}?
+├─ Check: Any LaTeX errors in logs?
+└─ Check: Are TikZ libraries loaded in _quarto.yml?
+
+Is diagram showing wrong values?
+├─ Calculate values manually first
+├─ Verify axis scales match data
+├─ Check sign conventions
+└─ Compare with similar working diagrams
+```
+
+---
+
+## Contact & Resources
+
+### This Project
+- **Primary maintainer**: Check git history
+- **Documentation**: README.md, TIKZ_FIX_NOTES.md
+- **Examples**: Look at existing diagrams in .qmd files
+
+### External Resources
+- [TikZ Manual](https://ctan.org/pkg/pgf)
+- [Quarto PDF Basics](https://quarto.org/docs/output-formats/pdf-basics.html)
+- [Quarto Raw Blocks](https://quarto.org/docs/authoring/markdown-basics.html#raw-content)
+
+---
+
+## Version History
+
+| Date | Change | Reason |
+|------|--------|--------|
+| 2025-09-30 | Converted from `{.tikz}` to `{=latex}` | Filter errors, simpler PDF rendering |
+| 2025-09-30 | Fixed value function graph scales | Values were plotted incorrectly |
+| 2025-09-30 | Fixed nested `align` → `aligned` | LaTeX compilation errors |
+
+---
+
+## Final Checklist for Agents
+
+Before submitting changes:
+
+- [ ] All TikZ blocks use `{=latex}` format
+- [ ] Graphs plot accurate calculated values
+- [ ] Axis scales appropriate for data range
+- [ ] Colors follow convention (green=in, red=out)
+- [ ] PDF renders without errors
+- [ ] HTML renders without errors (TikZ hidden OK)
+- [ ] Tested on actual PDF output (not just compilation)
+- [ ] Math formulas use `aligned` not `align` inside `$$`
+
+---
+
+**Last Updated**: September 30, 2025  
+**Status**: ✅ All diagrams working correctly  
+**Approach**: Native LaTeX TikZ for PDF, Mermaid for HTML cross-platform
