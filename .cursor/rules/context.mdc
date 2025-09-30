@@ -3,3 +3,10 @@ alwaysApply: true
 ---
 
 - Use docs/information to understand the source materials.
+- When writing about a new idea, include a box for references that includes a book and a slide reference. For locating references use docs/resource_index/slides.md and docs/resource_index/book.md. It may be possible something has no source material, in which case you can just point to the source material as "source material not available for this idea".
+- Boxes should be in the way of
+"""
+Book: 
+Slide: 
+"""
+- They should also contain a direct link to the source material in 
